@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Apply for Internship - {{ internship.title }}</title>
+</head>
+
+<body class="bg-emerald-50/30">
+    <nav class="bg-emerald-900 text-white p-4 px-8 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-4">
+            <img src="{{ url_for('static', filename='uploads/images/logo_software.png') }}" alt="Logo"
+                class="w-10 h-10 bg-white rounded-full p-1" />
+            <h1 class="font-black text-xl tracking-tighter italic">SOFTLEXIFY <span class="text-orange-500">ZONE</span>
+            </h1>
+        </div>
+        <a href="{{ url_for('student_dashboard') }}"
+            class="text-white hover:text-orange-500 transition font-bold text-sm">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+        </a>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12 max-w-4xl">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100">
+            <div class="bg-emerald-600 p-10 text-white text-center">
+                <h2 class="text-3xl font-black uppercase tracking-tight mb-2">Internship Enrollment Form</h2>
+                <p class="text-emerald-100 font-bold opacity-75">{{ internship.title }} @ {{ internship.company.username
+                    }}</p>
+            </div>
+
+            <form action="{{ url_for('apply_for_internship', internship_id=internship.id) }}" method="POST"
+                class="p-10 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest pl-2">Full
+                            Name</label>
+                        <input type="text" name="name" required
+                            class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl focus:border-emerald-500 outline-none transition-all font-bold text-slate-700"
+                            placeholder="Enter your full name">
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-xs font-black text-slate-500 uppercase tracking-widest pl-2">Education</label>
+                        <input type="text" name="education" required
+                            class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl focus:border-emerald-500 outline-none transition-all font-bold text-slate-700"
+                            placeholder="e.g. BS Computer Science (7th Semester)">
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-xs font-black text-slate-500 uppercase tracking-widest pl-2">Institute</label>
+                        <input type="text" name="institute" required
+                            class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl focus:border-emerald-500 outline-none transition-all font-bold text-slate-700"
+                            placeholder="University / College Name">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest pl-2">Domain of
+                            Internship</label>
+                        <input type="text" name="domain" value="{{ internship.domain }}" readonly
+                            class="w-full bg-slate-200 border-2 border-slate-200 p-4 rounded-2xl outline-none font-bold text-slate-500 cursor-not-allowed">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest pl-2">City</label>
+                        <input type="text" name="city" required
+                            class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl focus:border-emerald-500 outline-none transition-all font-bold text-slate-700"
+                            placeholder="Your City">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-500 uppercase tracking-widest pl-2">District</label>
+                        <input type="text" name="district" required
+                            class="w-full bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl focus:border-emerald-500 outline-none transition-all font-bold text-slate-700"
+                            placeholder="Your District">
+                    </div>
+                </div>
+
+                <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-emerald-600 p-2 rounded-lg text-white mt-1">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-emerald-900 text-sm uppercase">Application Notice</h4>
+                            <p class="text-xs text-emerald-700 font-bold mt-1 leading-relaxed">
+                                Once you submit this form, your request will be sent to the internship supervisor.
+                                Upon approval, you will receive an access key to enter your project dashboard.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-orange-500 text-white py-5 rounded-[2rem] font-black text-xl hover:bg-orange-600 transition shadow-2xl transform hover:scale-[1.02]">
+                    Submit Application <i class="fas fa-paper-plane ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Register - Softlexify Zone</title>
+  </head>
+  <body
+    class="bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center h-screen"
+  >
+    <div
+      class="bg-white p-10 rounded-2xl shadow-2xl w-[450px] border-t-8 border-blue-600"
+    >
+      <div class="text-center mb-8">
+        <img
+          src="{{ url_for('static', filename='uploads/images/logo_software.png') }}"
+          alt="Softlexify Logo"
+          class="w-24 mx-auto mb-2 rounded-full border-2 border-gray-100 shadow-md"
+        />
+        <h1 class="text-2xl font-bold text-blue-900 tracking-tight">
+          SOFTLEXIFY <span class="text-orange-500">ZONE</span>
+        </h1>
+        <p
+          class="text-gray-400 text-xs tracking-widest uppercase italic font-semibold"
+        >
+          Online Software Company
+        </p>
+      </div>
+
+      <h2
+        class="text-xl font-bold mb-6 text-center text-gray-700 uppercase tracking-wide"
+      >
+        Registration
+      </h2>
+
+      <form method="POST">
+        <div class="mb-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="Full Name"
+            class="w-full p-3 border-2 border-gray-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            class="w-full p-3 border-2 border-gray-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            class="w-full p-3 border-2 border-gray-100 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+            required
+          />
+        </div>
+
+        <div class="mb-6">
+          <label class="block mb-2 text-sm font-bold text-gray-600"
+            >Select Your Role:</label
+          >
+          <select
+            name="role"
+            class="w-full p-3 border-2 border-gray-100 rounded-lg focus:border-blue-500 bg-white outline-none cursor-pointer"
+          >
+            <option value="student">Student</option>
+            <option value="supervisor">Supervisor</option>
+            <option value="company_admin">Company Admin</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-orange-500 text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg mb-4"
+        >
+          Register Now
+        </button>
+      </form>
+
+      <p class="mt-4 text-center text-sm text-gray-600">
+        Already have an account?
+        <a
+          href="/login"
+          class="text-blue-600 font-bold hover:text-orange-500 transition underline"
+          >Login</a
+        >
+      </p>
+    </div>
+  </body>
+</html>

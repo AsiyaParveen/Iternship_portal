@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Supervisor Portal - Softlexify Zone</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-emerald-50/30 overflow-x-hidden">
+
+    <!-- Sidebar -->
+    <div class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 glass border-r border-emerald-100">
+        <div class="p-8">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="bg-emerald-600 p-2 rounded-xl">
+                    <img src="{{ url_for('static', filename='uploads/images/logo_software.png') }}" alt="Logo"
+                        class="w-8 h-8 invert brightness-0" />
+                </div>
+                <h2 class="text-xl font-black text-emerald-900 italic">SUPERVISOR <span
+                        class="text-orange-500">PRO</span></h2>
+            </div>
+
+            <div class="flex flex-col items-center mb-8 bg-emerald-50/50 p-6 rounded-[2rem] border border-emerald-100">
+                <div class="relative group">
+                    {% if current_user.profile_pic %}
+                    <img src="{{ url_for('static', filename='uploads/images/' + current_user.profile_pic) }}"
+                        class="w-24 h-24 rounded-full object-cover mb-4 shadow-lg border-4 border-emerald-600">
+                    {% else %}
+                    <div
+                        class="w-20 h-20 bg-emerald-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-lg shadow-emerald-200">
+                        {{ application.name[0] | upper }}
+                    </div>
+                    {% endif %}
+
+                    <form action="{{ url_for('supervisor_profile_update') }}" method="POST"
+                        enctype="multipart/form-data" class="absolute inset-0 opacity-0 cursor-pointer">
+                        <input type="file" name="profile_pic" onchange="this.form.submit()"
+                            class="absolute inset-0 cursor-pointer">
+                    </form>
+                    <div
+                        class="absolute -bottom-1 -right-1 bg-white p-1.5 rounded-full shadow-md border border-emerald-100 text-emerald-600 text-[10px] pointer-events-none group-hover:scale-110 transition">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-black text-emerald-900 text-center">{{ application.name }}</h3>
+                <p class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mt-1">Verified Expert</p>
+
+                <div class="mt-4 w-full space-y-2 border-t border-emerald-100 pt-4">
+                    <div class="flex items-center gap-3 text-xs font-bold text-slate-500">
+                        <i class="fas fa-envelope w-4 text-emerald-600"></i> {{ application.email }}
+                    </div>
+                    <div class="flex items-center gap-3 text-xs font-bold text-slate-500">
+                        <i class="fas fa-id-card w-4 text-emerald-600"></i> {{ application.cnic }}
+                    </div>
+                </div>
+            </div>
+
+            <nav class="space-y-3">
+                <a href="#"
+                    class="flex items-center gap-4 p-4 rounded-2xl bg-emerald-600 text-white font-bold shadow-emerald-200 shadow-xl transition">
+                    <i class="fas fa-th-large w-6"></i> Portal Home
+                </a>
+                <a href="{{ url_for('supervisor_dashboard') }}"
+                    class="flex items-center gap-4 p-4 rounded-2xl text-emerald-700 hover:bg-emerald-50 font-bold transition">
+                    <i class="fas fa-arrow-left w-6"></i> Back to Hiring
+                </a>
+                <a href="/logout"
+                    class="flex items-center gap-4 p-4 rounded-2xl text-red-500 hover:bg-red-50 font-bold transition">
+                    <i class="fas fa-sign-out-alt w-6"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-80 p-12">
+        <header class="mb-12 flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-black text-emerald-900 uppercase">Supervisor Dashboard</h1>
+                <p class="text-slate-500 font-bold mt-2">Welcome back, {{ application.name }}. You are supervising:
+                    <span class="text-emerald-600">{{ application.hiring_post.internship.title if
+                        application.hiring_post.internship else 'General Program' }}</span>
+                </p>
+            </div>
+            <div class="bg-white px-6 py-3 rounded-2xl shadow-sm border border-emerald-100">
+                <span class="text-xs font-black text-emerald-400 uppercase tracking-widest">Access Key: </span>
+                <span class="text-sm font-mono font-black text-emerald-800">{{ application.access_key }}</span>
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="mb-8 p-5 rounded-2xl glass font-bold border-l-4 {{ 'border-emerald-500 text-emerald-700' if category == 'success' else 'border-red-500 text-red-700' }} shadow-lg">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Three Main Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <a href="#students"
+                class="group bg-white p-10 rounded-[3rem] shadow-xl border border-emerald-50 hover:shadow-2xl hover:bg-emerald-600 transition-all duration-500 transform hover:-translate-y-2">
+                <div
+                    class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center text-3xl mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-800 mb-2 group-hover:text-white transition-colors">Assign Task
+                </h3>
+                <p
+                    class="text-slate-400 font-bold text-xs uppercase tracking-widest group-hover:text-emerald-100 transition-colors">
+                    Create new assignments</p>
+            </a>
+
+            <a href="{{ url_for('supervisor_view_submissions', app_id=application.id) }}"
+                class="group bg-white p-10 rounded-[3rem] shadow-xl border border-indigo-50 hover:shadow-2xl hover:bg-indigo-600 transition-all duration-500 transform hover:-translate-y-2">
+                <div
+                    class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-3xl flex items-center justify-center text-3xl mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-800 mb-2 group-hover:text-white transition-colors">Task
+                    Approved List</h3>
+                <p
+                    class="text-slate-400 font-bold text-xs uppercase tracking-widest group-hover:text-indigo-100 transition-colors">
+                    Review submitted work</p>
+            </a>
+
+            <a href="{{ url_for('view_student_requests', app_id=application.id) }}"
+                class="group bg-white p-10 rounded-[3rem] shadow-xl border border-orange-50 hover:shadow-2xl hover:bg-orange-600 transition-all duration-500 transform hover:-translate-y-2">
+                <div
+                    class="w-16 h-16 bg-orange-100 text-orange-600 rounded-3xl flex items-center justify-center text-3xl mb-6 group-hover:bg-white/20 group-hover:text-white transition-colors shadow-inner">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-800 mb-2 group-hover:text-white transition-colors">Student
+                    Request</h3>
+                <p
+                    class="text-slate-400 font-bold text-xs uppercase tracking-widest group-hover:text-orange-100 transition-colors">
+                    Manage enrollments</p>
+            </a>
+        </div>
+
+        <!-- Data Tables Placeholder -->
+        <div id="students" class="bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-emerald-50">
+            <div class="p-10 border-b border-emerald-50 bg-emerald-50/20 flex justify-between items-center">
+                <h3 class="text-xl font-black text-emerald-900 uppercase">Supervised Students</h3>
+                <span
+                    class="bg-white px-4 py-1 rounded-full text-[10px] font-black text-emerald-600 border border-emerald-100 uppercase tracking-widest">Active
+                    Interns</span>
+            </div>
+            <div class="p-10">
+                {% if students %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-emerald-50">
+                                <th class="pb-6 pl-4">Intern Name</th>
+                                <th class="pb-6">Education</th>
+                                <th class="pb-6">Domain</th>
+                                <th class="pb-6">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-emerald-50">
+                            {% for student_app in students %}
+                            <tr class="group hover:bg-emerald-50/30 transition">
+                                <td class="py-6 pl-4">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center font-black">
+                                            {{ student_app.name[0] | upper }}
+                                        </div>
+                                        <div>
+                                            <p class="font-black text-slate-800">{{ student_app.name }}</p>
+                                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                ID: #{{ student_app.student_id }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-6 font-bold text-slate-500 text-sm">{{ student_app.education }}</td>
+                                <td class="py-6 font-bold text-emerald-600 text-sm italic">{{ student_app.domain }}</td>
+                                <td class="py-6">
+                                    <a href="{{ url_for('assign_task', app_id=application.id, student_id=student_app.student_id) }}"
+                                        class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-500 transition shadow-md">
+                                        Assign Task
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="py-10 text-center">
+                    <div class="mb-6 opacity-10">
+                        <i class="fas fa-users-cog text-9xl text-emerald-900"></i>
+                    </div>
+                    <p class="text-slate-400 italic font-medium">No approved students yet. Check "Student Requests" to
+                        approve applicants.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

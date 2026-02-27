@@ -1,0 +1,39 @@
+<table class="w-full text-left">
+  <thead
+    class="bg-gray-50 text-gray-400 uppercase text-[10px] font-black tracking-widest"
+  >
+    <tr>
+      <th class="p-4">Name</th>
+      <th class="p-4">Email</th>
+      <th class="p-4 text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-gray-100">
+    {% for user in users %}
+    <tr class="hover:bg-gray-50 transition">
+      <td class="p-4 font-bold text-gray-700">{{ user.username }}</td>
+      <td class="p-4 text-gray-400">{{ user.email }}</td>
+      <td class="p-4 text-center">
+        <div class="flex justify-center gap-2">
+          <a
+            href="{{ url_for('approve_user', user_id=user.id) }}"
+            class="bg-green-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-700 shadow-md"
+            >Approve</a
+          >
+          <a
+            href="{{ url_for('reject_user', user_id=user.id) }}"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-600 shadow-md"
+            >Reject</a
+          >
+        </div>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="3" class="p-10 text-center text-gray-400 italic">
+        Is role ke liye koi pending request nahi hai.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

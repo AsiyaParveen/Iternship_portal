@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Review Submissions - {{ application.name }}</title>
+</head>
+
+<body class="bg-indigo-50/30">
+    <nav class="bg-indigo-900 text-white p-4 px-8 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-4">
+            <img src="{{ url_for('static', filename='uploads/images/logo_software.png') }}" alt="Logo"
+                class="w-10 h-10 bg-white rounded-full p-1" />
+            <h1 class="font-black text-xl tracking-tighter italic">SOFTLEXIFY <span class="text-orange-500">ZONE</span>
+            </h1>
+        </div>
+        <a href="{{ url_for('supervisor_portal', app_id=application.id) }}"
+            class="text-white hover:text-orange-500 transition font-bold text-sm">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Portal
+        </a>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12">
+        <div class="mb-10 lg:flex justify-between items-end">
+            <div>
+                <h2 class="text-4xl font-black text-indigo-900 uppercase">Task Submissions</h2>
+                <p class="text-slate-500 font-bold mt-2">Review completed work and approve for certification.</p>
+            </div>
+            <div class="mt-4 lg:mt-0 bg-white px-6 py-3 rounded-2xl shadow-sm border border-indigo-100 italic">
+                <span class="text-indigo-600 font-black">{{ submissions|length }}</span> Submissions Received
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="mb-8 p-5 rounded-2xl font-bold border-l-4 {{ 'border-emerald-500 bg-emerald-50 text-emerald-700' if category == 'success' else 'border-red-500 bg-red-50 text-red-700' }} shadow-lg">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="grid grid-cols-1 gap-12">
+            {% for sub in submissions %}
+            <div
+                class="bg-white rounded-[3rem] shadow-xl overflow-hidden border border-gray-100 flex flex-col hover:shadow-2xl transition duration-500">
+                <div class="p-8 border-b border-indigo-50 bg-indigo-50/20 flex justify-between items-center">
+                    <div class="flex items-center gap-6">
+                        <div
+                            class="w-16 h-16 bg-indigo-600 rounded-[1.5rem] flex items-center justify-center text-white text-2xl font-bold">
+                            {{ sub.student_name[0] | upper if sub.student_name else 'S' }}
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-slate-800">{{ sub.student_name }}</h3>
+                            <p class="text-sm font-bold text-slate-400 capitalize">{{ sub.internship_domain }} Intern
+                            </p>
+                        </div>
+                    </div>
+                    <span class="px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest border-2 
+                    {{ 'bg-orange-50 text-orange-600 border-orange-100' if sub.status == 'PENDING' else 
+                       'bg-emerald-50 text-emerald-600 border-emerald-100' if sub.status == 'APPROVED' else 
+                       'bg-red-50 text-red-600 border-red-100' }}">
+                        {{ sub.status }}
+                    </span>
+                </div>
+
+                <div class="p-10 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Details Column -->
+                    <div class="space-y-8">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">CNIC</p>
+                                <p class="text-slate-800 font-black">{{ sub.cnic }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Email</p>
+                                <p class="text-slate-800 font-bold text-sm">{{ sub.email }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">City</p>
+                                <p class="text-slate-800 font-bold uppercase">{{ sub.city }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">District</p>
+                                <p class="text-slate-800 font-bold uppercase">{{ sub.district }}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Links & Files
+                            </p>
+                            <div class="flex flex-wrap gap-3">
+                                {% if sub.github_link %}
+                                <a href="{{ sub.github_link }}" target="_blank"
+                                    class="bg-slate-900 text-white px-5 py-3 rounded-2xl flex items-center gap-2 hover:scale-105 transition shadow-lg">
+                                    <i class="fab fa-github"></i> <span class="text-xs font-black uppercase">GitHub
+                                        Repo</span>
+                                </a>
+                                {% endif %}
+                                {% if sub.linkedin_link %}
+                                <a href="{{ sub.linkedin_link }}" target="_blank"
+                                    class="bg-blue-600 text-white px-5 py-3 rounded-2xl flex items-center gap-2 hover:scale-105 transition shadow-lg">
+                                    <i class="fab fa-linkedin"></i> <span
+                                        class="text-xs font-black uppercase">Post</span>
+                                </a>
+                                {% endif %}
+                                {% if sub.file_path %}
+                                <a href="{{ url_for('static', filename='uploads/images/' + sub.file_path) }}"
+                                    target="_blank"
+                                    class="bg-orange-500 text-white px-5 py-3 rounded-2xl flex items-center gap-2 hover:scale-105 transition shadow-lg">
+                                    <i class="fas fa-file-download"></i> <span
+                                        class="text-xs font-black uppercase">Download Zip</span>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="p-6 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200">
+                            <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-3">Task
+                                Reference</p>
+                            <h4 class="text-lg font-black text-slate-700">{{ sub.task.title }}</h4>
+                            <p class="text-xs font-bold text-slate-400 mt-1">Submitted at: {{
+                                sub.submitted_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Content Column -->
+                    <div class="space-y-4">
+                        <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Implementation Notes
+                            / Code</p>
+                        <div
+                            class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-inner h-full min-h-[300px] overflow-auto">
+                            <pre
+                                class="text-emerald-400 font-mono text-sm whitespace-pre-wrap">{{ sub.code_content }}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                {% if sub.status == 'PENDING' %}
+                <div class="p-6 bg-indigo-50/50 flex gap-4">
+                    <a href="{{ url_for('process_submission', app_id=application.id, submission_id=sub.id, action='approve') }}"
+                        class="flex-grow bg-emerald-500 text-white py-6 rounded-[2rem] font-black text-sm uppercase hover:bg-emerald-600 transition text-center shadow-xl flex items-center justify-center gap-3">
+                        <i class="fas fa-certificate"></i> Approve & Generate Certificate
+                    </a>
+                    <a href="{{ url_for('process_submission', app_id=application.id, submission_id=sub.id, action='reject') }}"
+                        class="bg-red-50 text-red-500 px-10 py-6 rounded-[2rem] font-black text-sm uppercase hover:bg-red-500 hover:text-white transition text-center border-2 border-red-100">
+                        Reject Work
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="py-32 text-center bg-white rounded-[4rem] shadow-xl border-4 border-dashed border-indigo-100">
+                <i class="fas fa-terminal text-7xl text-indigo-100 mb-8"></i>
+                <h3 class="text-3xl font-black text-indigo-900 uppercase">Wait for Magic...</h3>
+                <p class="text-slate-400 font-bold mt-2">Submitted student tasks will appear here for your professional
+                    review.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>

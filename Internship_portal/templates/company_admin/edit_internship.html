@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Edit Internship - {{ internship.title }}</title>
+</head>
+
+<body class="bg-gray-50">
+    {% include 'company_admin/sidebar_partial.html' %}
+
+    <nav class="bg-indigo-900 text-white p-4 px-8 flex justify-between items-center shadow-2xl relative z-30">
+        <div class="flex items-center gap-6">
+            <button onclick="toggleSidebar()"
+                class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-all border border-white/20">
+                <i class="fas fa-bars"></i>
+                <span class="text-xs font-black uppercase tracking-widest hidden sm:inline">Menu</span>
+            </button>
+            <div class="flex items-center gap-4 border-l border-white/20 pl-6">
+                <img src="{{ url_for('static', filename='uploads/images/logo_software.png') }}" alt="Logo"
+                    class="w-10 h-10 bg-white rounded-full p-1" />
+                <div>
+                    <h1 class="font-black text-xl tracking-tighter italic leading-none">
+                        SOFTLEXIFY <span class="text-orange-500">ZONE</span>
+                    </h1>
+                    <p class="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Company Portal</p>
+                </div>
+            </div>
+        </div>
+        <a href="{{ url_for('company_dashboard') }}" class="text-sm font-bold opacity-75 hover:opacity-100 transition">←
+            Back to Dashboard</a>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12 flex justify-center">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl p-10 border border-gray-50">
+            <h2 class="text-3xl font-black text-indigo-900 mb-8 border-l-8 border-indigo-500 pl-4 uppercase">Edit
+                Internship</h2>
+
+            <form action="{{ url_for('edit_internship', internship_id=internship.id) }}" method="POST"
+                enctype="multipart/form-data" class="space-y-6">
+                <div>
+                    <label class="block text-slate-700 font-black text-xs uppercase tracking-widest mb-2">Internship
+                        Title</label>
+                    <input type="text" name="title" value="{{ internship.title }}" required
+                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition"
+                        placeholder="e.g. Web Development Intern">
+                </div>
+
+                <div>
+                    <label class="block text-slate-700 font-black text-xs uppercase tracking-widest mb-2">Domain /
+                        Category</label>
+                    <select name="domain" required
+                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition">
+                        <option value="Web Development" {% if internship.domain=='Web Development' %}selected{% endif
+                            %}>Web Development</option>
+                        <option value="Mobile App Development" {% if internship.domain=='Mobile App Development'
+                            %}selected{% endif %}>Mobile App Development</option>
+                        <option value="Data Science" {% if internship.domain=='Data Science' %}selected{% endif %}>Data
+                            Science</option>
+                        <option value="Graphic Design" {% if internship.domain=='Graphic Design' %}selected{% endif %}>
+                            Graphic Design</option>
+                        <option value="Digital Marketing" {% if internship.domain=='Digital Marketing' %}selected{%
+                            endif %}>Digital Marketing</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-700 font-black text-xs uppercase tracking-widest mb-2">Update Poster
+                        Image (Current: {{ internship.poster_image or 'None' }})</label>
+                    {% if internship.poster_image %}
+                    <img src="{{ url_for('static', filename='uploads/images/' + internship.poster_image) }}"
+                        class="w-32 h-20 object-cover rounded-xl mb-2 border">
+                    {% endif %}
+                    <input type="file" name="poster_image" accept="image/*"
+                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition">
+                </div>
+
+                <div>
+                    <label
+                        class="block text-slate-700 font-black text-xs uppercase tracking-widest mb-2">Description</label>
+                    <textarea name="description" required rows="5"
+                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 focus:outline-none focus:ring-4 focus:ring-indigo-100 transition"
+                        placeholder="Detailed description of the internship role...">{{ internship.description }}</textarea>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit"
+                        class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black text-lg hover:bg-emerald-700 transition shadow-xl transform hover:-translate-y-1">
+                        💾 Update Post
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

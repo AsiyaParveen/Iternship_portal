@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Student Dashboard - Softlexify Zone</title>
+</head>
+
+<body class="bg-slate-50">
+    <nav class="bg-indigo-900 text-white p-4 px-8 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-4">
+            <img src="{{ url_for('static', filename='uploads/images/logo_software.png') }}" alt="Logo"
+                class="w-12 h-12 bg-white rounded-full p-1" />
+            <h1 class="font-black text-xl tracking-tighter italic">SOFTLEXIFY <span class="text-orange-500">ZONE</span>
+            </h1>
+        </div>
+        <div class="flex items-center gap-6">
+            <span class="text-sm font-bold opacity-75">Welcome, {{ current_user.username }}</span>
+            <a href="/logout"
+                class="bg-red-500 px-5 py-2 rounded-xl font-bold hover:bg-red-600 transition shadow-lg text-sm">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="mb-8 p-5 rounded-2xl font-bold border-l-4 {{ 'border-emerald-500 bg-emerald-50 text-emerald-700' if category == 'success' else 'border-red-500 bg-red-50 text-red-700' }} shadow-lg">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Key Entry Section -->
+        <div class="mb-8 bg-white p-6 rounded-[2rem] shadow-xl border border-indigo-50">
+            <div class="max-w-2xl mx-auto text-center">
+                <h3 class="text-2xl font-black text-indigo-900 uppercase mb-4">Enter Access Key</h3>
+                <p class="text-slate-500 font-bold mb-8">Got an approval key? Enter it here to access your
+                    domain-specific dashboard.</p>
+                <form action="{{ url_for('verify_student_key') }}" method="POST"
+                    class="flex flex-col md:flex-row gap-4">
+                    <input type="text" name="access_key" required placeholder="Paste your 8-digit key here..."
+                        class="flex-grow bg-slate-50 border-2 border-slate-100 p-4 rounded-2xl focus:border-indigo-500 outline-none transition-all font-mono font-black text-center text-xl tracking-widest">
+                    <button type="submit"
+                        class="bg-orange-500 text-white px-10 py-4 rounded-2xl font-black uppercase hover:bg-orange-600 transition shadow-lg">
+                        Access Portal <i class="fas fa-key ml-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if my_applications %}
+        <!-- My Approved Portals -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-black text-indigo-900 mb-6 border-l-8 border-indigo-500 pl-4 uppercase">My Active
+                Internships</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for app in my_applications %}
+                {% if app.status == 'APPROVED' %}
+                <a href="{{ url_for('student_portal', app_id=app.id) }}"
+                    class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 rounded-[2rem] shadow-xl text-white hover:scale-[1.02] transition transform group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                            <i class="fas fa-rocket text-2xl"></i>
+                        </div>
+                        <span
+                            class="bg-emerald-500 text-[10px] font-black uppercase px-3 py-1 rounded-full">Approved</span>
+                    </div>
+                    <h3 class="text-xl font-black mb-1">{{ app.internship.title }}</h3>
+                    <p class="text-indigo-100 font-bold text-sm mb-4">{{ app.domain }}</p>
+                    <div
+                        class="flex items-center text-xs font-black uppercase tracking-widest text-orange-400 group-hover:text-white transition">
+                        Open Portal <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Available Internships -->
+        <div>
+            <h2 class="text-2xl font-black text-indigo-900 mb-6 border-l-8 border-orange-500 pl-4 uppercase">Explore New
+                Opportunities</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for post in internships %}
+                <div
+                    class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100 flex flex-col hover:shadow-2xl transition duration-500 group">
+                    <div class="relative h-48 overflow-hidden">
+                        {% if post.poster_image %}
+                        <img src="{{ url_for('static', filename='uploads/images/' + post.poster_image) }}"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        {% else %}
+                        <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
+                            <i class="fas fa-image text-5xl"></i>
+                        </div>
+                        {% endif %}
+                        <div
+                            class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black text-indigo-900 uppercase tracking-widest">
+                            {{ post.domain }}</div>
+                    </div>
+                    <div class="p-6 flex-grow">
+                        <p class="text-xs font-black text-orange-500 uppercase tracking-widest mb-2">{{
+                            post.company.username }}</p>
+                        <h3 class="text-xl font-black text-slate-800 mb-4">{{ post.title }}</h3>
+                        <p class="text-slate-500 text-sm line-clamp-3 mb-6">{{ post.description }}</p>
+                        <a href="{{ url_for('apply_for_internship', internship_id=post.id) }}"
+                            class="block w-full text-center bg-indigo-600 text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-indigo-700 transition shadow-lg">
+                            Quick Apply <i class="fas fa-bolt ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div
+                    class="col-span-full py-20 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
+                    <i class="fas fa-search text-6xl text-slate-200 mb-4"></i>
+                    <p class="text-slate-400 italic font-bold">No internships available at the moment. Please check back
+                        later!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

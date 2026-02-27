@@ -1,0 +1,14 @@
+Flask
+Flask-Login
+Flask-Mail
+Flask-SQLAlchemy
+Flask-Bcrypt
+reportlab
+python-dotenv
+werkzeug
+email_validator
+gunicorn
+SQLAlchemy
+mysqlclient
+pymysql
+psycopg2-binary
